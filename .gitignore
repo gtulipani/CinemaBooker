@@ -1,0 +1,6 @@
+*.o
+cmake-build-debug
+CMakeLists.txt
+.idea
+src/server
+src/client
