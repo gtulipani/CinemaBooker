@@ -3,6 +3,8 @@
 #include <iostream>
 #include <algorithm>
 #include <string>
+#include <sstream>
+#include <iomanip>
 
 #include "commons_CSVIterator.h"
 #include "server.h"
@@ -35,9 +37,30 @@ std::ostream &operator<<(std::ostream &out, const Showing &movie_showing) {
 }
 
 void
-Server::processCommand(const std::string &input, Socket& client_socket) {
+Server::processCommand(const std::string &input, Socket &client_socket) {
 	std::cout << "Processing command: " << input << std::endl;
-
+	std::string out;
+	if (input == LIST_BY_LANGUAGE_OPERATION_IDENTIFIER) {
+		listMoviesByLanguage(input, out);
+	} else if (input == LIST_BY_AGE_OPERATION_IDENTIFIER) {
+		listMoviesByAge(input, out);
+	} else if (input == LIST_BY_GENRE_OPERATION_IDENTIFIER) {
+		listMoviesByGenre(input, out);
+	} else if (input == LIST_BY_DATE_OPERATION_IDENTIFIER) {
+		std::tm tm{};
+		std::istringstream ss(input);
+		ss >> std::get_time(&tm, "%d/%m/%Y");
+		listShowingsForDay(tm, out);
+	} else if (input == LIST_SEATS_OPERATION_IDENTIFIER) {
+		listSeatsFromShowingId(input, out);
+	} else if (input == BOOK_SEAT_OPERATION_IDENTIFIER) {
+		//
+	} else {
+		throw ClientOperationException("Operation invalid: " + input);
+	}
+	unsigned long message_size = out.size();
+	client_socket.send_int((int) message_size);
+	client_socket.send(out, message_size);
 }
 
 Room *Server::getRoomWithId(std::string id) {
@@ -156,17 +179,19 @@ void Server::start() {
 		int size_len = client_socket.receive_int();
 		std::cout << "Received quantity of bytes: " << size_len << std::endl;
 		bytes_received = client_socket.receive(input,
-										static_cast<unsigned long>(size_len));
-		std::cout << "Received actual bytes quantity: " << bytes_received << std::endl;
+											   static_cast<unsigned long>(size_len));
+		std::cout << "Received actual bytes quantity: " << bytes_received
+				  << std::endl;
 		if (bytes_received > 0) {
 			// Print the message in std::cout
 			std::cout << input;
-			//processCommand(input, &client_socket);
+			processCommand(input, client_socket);
 		}
 	} while (bytes_received > 0);
 }
 
-void Server::listMoviesByLanguage(std::string language) const {
+void
+Server::listMoviesByLanguage(std::string language, std::string &out) const {
 	std::set<Movie> filtered_set;
 	std::copy_if(
 			movies.begin(),
@@ -180,7 +205,8 @@ void Server::listMoviesByLanguage(std::string language) const {
 	});
 }
 
-void Server::listMoviesByAge(std::string age_restriction) const {
+void
+Server::listMoviesByAge(std::string age_restriction, std::string &out) const {
 	std::set<Movie> filtered_set;
 	std::copy_if(
 			movies.begin(),
@@ -194,7 +220,7 @@ void Server::listMoviesByAge(std::string age_restriction) const {
 	});
 }
 
-void Server::listMoviesByGenre(std::string genre) const {
+void Server::listMoviesByGenre(std::string genre, std::string &out) const {
 	std::set<Movie> filtered_set;
 	std::copy_if(
 			movies.begin(),
@@ -208,7 +234,7 @@ void Server::listMoviesByGenre(std::string genre) const {
 	});
 }
 
-void Server::listShowingsForDay(std::tm day) const {
+void Server::listShowingsForDay(std::tm day, std::string &out) const {
 	std::set<Showing> filtered_set;
 	std::copy_if(
 			showings.begin(),
@@ -223,7 +249,7 @@ void Server::listShowingsForDay(std::tm day) const {
 				  });
 }
 
-void Server::listSeatsFromShowingId(std::string id) const {
+void Server::listSeatsFromShowingId(std::string id, std::string &out) const {
 	std::set<Showing> filtered_set;
 	std::copy_if(
 			showings.begin(),
@@ -239,7 +265,8 @@ void Server::listSeatsFromShowingId(std::string id) const {
 				  });
 }
 
-void Server::bookShowing(std::string showing_id, char row, int column) {
+void Server::bookShowing(std::string showing_id, char row, int column,
+						 std::string &out) {
 	bool showing_found = false;
 	std::for_each(showings.begin(), showings.end(),
 				  [&](Showing movie_showing) {
