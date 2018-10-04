@@ -1,6 +1,7 @@
 #include <utility>
 #include <string>
 #include <list>
+#include <algorithm>
 
 #include "server_Movie.h"
 #include "server_InvalidInputParamsException.h"

@@ -9,6 +9,14 @@
 #include "server_RoomCreator.h"
 #include "server_InputFileException.h"
 #include "server_ClientOperationException.h"
+#include "commons_Socket.h"
+
+#define LIST_BY_LANGUAGE_OPERATION_IDENTIFIER "IDIOMA"
+#define LIST_BY_AGE_OPERATION_IDENTIFIER "EDAD"
+#define LIST_BY_GENRE_OPERATION_IDENTIFIER "GENERO"
+#define LIST_BY_DATE_OPERATION_IDENTIFIER "FECHA"
+#define LIST_SEATS_OPERATION_IDENTIFIER "ASIENTOS"
+#define BOOK_SEAT_OPERATION_IDENTIFIER "RESERVA"
 
 /**
  * Define the friend function for the Movie
@@ -24,6 +32,12 @@ std::ostream &operator<<(std::ostream &out, const Movie &movie) {
 std::ostream &operator<<(std::ostream &out, const Showing &movie_showing) {
 	out << (std::string) movie_showing;
 	return out;
+}
+
+void
+Server::processCommand(const std::string &input, Socket& client_socket) {
+	std::cout << "Processing command: " << input << std::endl;
+
 }
 
 Room *Server::getRoomWithId(std::string id) {
@@ -101,14 +115,6 @@ Server::parseShowingsCsv(std::string showingsCsvFilePath) {
 				(*iterator)[2],
 				(*iterator)[3]));
 	}
-	/*Showing showing(
-			1,
-			Room("1", "2D", "chica"),
-			//getRoomWithId("A"),
-			getMovieWithTitle("Megalodon (Castellano)"),
-			"13/10/2018",
-			"12:00");
-	movie_showings.insert(showing);*/
 	return movie_showings;
 }
 
@@ -131,9 +137,33 @@ Server::Server(std::string port, std::string rooms_csv_file_path,
 
 Server::~Server() {
 	std::for_each(rooms.begin(), rooms.end(), [](Room *room) {
-		std::cout << "Deleting room" << std::endl;
 		delete room;
 	});
+}
+
+void Server::start() {
+	Socket socket{};
+	socket.bind(port);
+
+	Socket client_socket = socket.accept();
+
+	// Receive commands from the socket
+	std::string input;
+	std::string output;
+	long bytes_received = 0;
+	std::cout << "Will start to process commands" << std::endl;
+	do {
+		int size_len = client_socket.receive_int();
+		std::cout << "Received quantity of bytes: " << size_len << std::endl;
+		bytes_received = client_socket.receive(input,
+										static_cast<unsigned long>(size_len));
+		std::cout << "Received actual bytes quantity: " << bytes_received << std::endl;
+		if (bytes_received > 0) {
+			// Print the message in std::cout
+			std::cout << input;
+			//processCommand(input, &client_socket);
+		}
+	} while (bytes_received > 0);
 }
 
 void Server::listMoviesByLanguage(std::string language) const {

@@ -136,7 +136,7 @@ long socket_send(socket_t *self, const char *buffer, long size) {
 	bool is_the_socket_valid = true;
 	while (sent < size && is_the_socket_valid) {
 		s = (int) send(self->fd, &buffer[sent], (size_t) (size - sent),
-					   0);
+					   MSG_NOSIGNAL);
 
 		if (s <= 0) {
 			is_the_socket_valid = false;
@@ -157,25 +157,19 @@ long socket_recv(socket_t *self, char *buffer,
 	long received = 0;
 	int s = 0;
 	bool are_we_connected = true;
-	bool finished = false;
 	bool result = true;
-	while (are_we_connected && !finished && (received < chunk_size)) {
-		int new_s = (int) recv(self->fd, &buffer[received],
+	while (are_we_connected && (received < chunk_size)) {
+		s = (int) recv(self->fd, &buffer[received],
 							   (chunk_size - received),
-							   0);
+							   MSG_NOSIGNAL);
 
-		if (new_s == s) { //Didn't get new bytes
-			finished = true;
+		if (s == 0) { // Socket closed
+			are_we_connected = false;
+		} else if (s < 0) { // Error
+			are_we_connected = false;
+			result = false;
 		} else {
-			if (new_s == 0) { // Socket closed
-				are_we_connected = false;
-			} else if (new_s < 0) { // Error
-				are_we_connected = false;
-				result = false;
-			} else {
-				s = new_s;
-				received += new_s;
-			}
+			received += s;
 		}
 	}
 	return result ? received : SOCKET_CONNECTION_ERROR;
@@ -188,9 +182,11 @@ long socket_send_int(socket_t *self, int num) {
 }
 
 int socket_recv_int(socket_t *self, int *out) {
+	printf("Will actually receive int\n");
 	char buffer[PROTOCOL_INT_BYTES];
 	if (socket_recv(self, buffer, PROTOCOL_INT_BYTES) ==
 		SOCKET_CONNECTION_ERROR) {
+		printf("Socket returned error on int\n");
 		return SOCKET_CONNECTION_ERROR;
 	}
 	*out = from_big_endian(buffer);

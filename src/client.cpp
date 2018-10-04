@@ -19,6 +19,7 @@ void Client::start() {
 	while (std::cin.peek() != '\n') {
 		std::getline(std::cin, input);
 		unsigned long input_size = input.size();
+		socket.send_int(static_cast<int>(input_size));
 		socket.send(std::move(input), input_size);
 
 		long bytes_received = 0;

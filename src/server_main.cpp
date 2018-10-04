@@ -7,6 +7,8 @@
 #include "server_ClientOperationException.h"
 #include "server_InvalidInputParamsException.h"
 
+#define SERVER_USAGE_PARAMETERS_HELP "Uso: ./server <puerto> <salas.csv> <peliculas.csv> <funciones.csv>"
+
 #define SERVER_PROGRAM_RESULT_SUCCESS 0
 #define SERVER_INPUT_PARAMS_ERROR 1
 #define SERVER_INPUT_FILES_ERROR 2
@@ -14,13 +16,15 @@
 
 int main(int argc, char *argv[]) {
 	if (argc != 5) {
+		std::cout << SERVER_USAGE_PARAMETERS_HELP << std::endl;
 		return SERVER_INPUT_PARAMS_ERROR;
 	} else {
 		try {
 			// Server receives port, roomsCsv, moviesCsv, showingsCsv
 			Server server(argv[1], argv[2], argv[3], argv[4]);
+			server.start();
 
-			std::cout << "Listing movies by language: ESP" << std::endl;
+			/*std::cout << "Listing movies by language: ESP" << std::endl;
 			server.listMoviesByLanguage("ESP");
 
 			std::cout << "Listing movies by age: ATP" << std::endl;
@@ -43,7 +47,7 @@ int main(int argc, char *argv[]) {
 			server.bookShowing("2", 'A', 1);
 
 			std::cout << "Reprinting seats for that same showing" << std::endl;
-			server.listSeatsFromShowingId("2");
+			server.listSeatsFromShowingId("2");*/
 		} catch (InputFileException &e) {
 			return SERVER_INPUT_PARAMS_ERROR;
 		} catch (InvalidInputParamsException &e) {

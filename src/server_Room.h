@@ -2,6 +2,7 @@
 #define __ROOM_H__
 
 #include <string>
+#include <array>
 
 template <class T, int ROW, int COL>
 using Matrix = std::array<std::array<T, COL>, ROW>;

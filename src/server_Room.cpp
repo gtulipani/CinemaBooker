@@ -3,6 +3,7 @@
 #include <sstream>
 #include <list>
 #include <string>
+#include <algorithm>
 
 #include "server_Room.h"
 #include "server_SeatAlreadyBookedException.h"
