@@ -1,32 +1,36 @@
+#include <iostream>
+#include <string>
+
 #include "commons_Socket.h"
 #include "commons_ConnectionRefusedException.h"
 
-Socket::Socket() : skt(nullptr) {}
+Socket::Socket() : initialized(false) {}
 
 void Socket::connect(std::string host, std::string port) {
 	// Connect through the socket
-	if (socket_connect(skt, host.c_str(), port.c_str()) ==
+	if (socket_connect(&skt, host.c_str(), port.c_str()) ==
 			SOCKET_CONNECTION_ERROR) {
 		throw ConnectionRefusedException();
 	}
+	initialized = true;
 }
 
 void Socket::send(std::string source, unsigned long size) {
-	if (skt == nullptr) {
+	if (!initialized) {
 		throw ConnectionRefusedException();
 	}
 	// Send message through the socket
-	if (socket_send(skt, source.c_str(), size) == SOCKET_CONNECTION_ERROR) {
+	if (socket_send(&skt, source.c_str(), size) == SOCKET_CONNECTION_ERROR) {
 		throw ConnectionRefusedException();
 	}
 }
 
-long Socket::receive(std::string out, unsigned long size) {
-	if (skt == nullptr) {
+long Socket::receive(std::string& out, unsigned long size) {
+	if (!initialized) {
 		throw ConnectionRefusedException();
 	}
 	char* buffer = (char*) malloc(size);
-	long bytes_received = socket_recv(skt, buffer, size);
+	long bytes_received = socket_recv(&skt, buffer, size);
 	if (bytes_received == SOCKET_CONNECTION_ERROR) {
 		free(buffer);
 		throw ConnectionRefusedException();
@@ -37,7 +41,7 @@ long Socket::receive(std::string out, unsigned long size) {
 }
 
 Socket::~Socket() {
-	if (skt != nullptr) {
-		socket_close(skt);
+	if (!initialized) {
+		socket_close(&skt);
 	}
 }

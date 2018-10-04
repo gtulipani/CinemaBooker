@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #define PROTOCOL_INT_BYTES 4
 

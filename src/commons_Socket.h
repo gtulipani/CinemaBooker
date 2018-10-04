@@ -7,7 +7,8 @@
 
 class Socket {
 private:
-	socket_t *skt;
+	bool initialized;
+	socket_t skt;
 public:
 	Socket();
 
@@ -15,7 +16,7 @@ public:
 
 	void send(std::string source, unsigned long size);
 
-	long receive(std::string out, unsigned long size);
+	long receive(std::string& out, unsigned long size);
 
 	~Socket();
 };

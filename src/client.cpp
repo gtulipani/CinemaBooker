@@ -7,11 +7,10 @@
 #define CHUNK_SIZE 10
 
 Client::Client(std::string server_ip, std::string port) :
-	server_ip(std::move(server_ip)), port(std::move(port)) {}
+		server_ip(std::move(server_ip)), port(std::move(port)) {}
 
 void Client::start() {
 	Socket socket{};
-	
 	socket.connect(server_ip, port);
 
 	// Read command to be executed from cin
