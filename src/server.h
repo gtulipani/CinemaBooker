@@ -20,6 +20,8 @@ private:
 	std::set<Movie> movies;
 	std::set<Showing> showings;
 
+	std::vector<std::string> split(const std::string &s, char delimiter);
+
 	void processCommand(const std::string &input, Socket &client_socket);
 
 	Room *getRoomWithId(std::string id);
@@ -45,18 +47,26 @@ public:
 
 	void start();
 
-	void listMoviesByLanguage(std::string language, std::string &out) const;
-
-	void listMoviesByAge(std::string age_restriction, std::string &out) const;
-
-	void listMoviesByGenre(std::string genre, std::string &out) const;
-
-	void listSeatsFromShowingId(std::string id, std::string &out) const;
-
-	void listShowingsForDay(std::tm day, std::string &out) const;
+	void
+	listMoviesByLanguage(const std::string &language,
+						 std::ostringstream &stream) const;
 
 	void
-	bookShowing(std::string showing_id, char row, int column, std::string &out);
+	listMoviesByAge(const std::string &age_restriction,
+					std::ostringstream &stream) const;
+
+	void listMoviesByGenre(const std::string &genre,
+						   std::ostringstream &stream) const;
+
+	void listSeatsFromShowingId(const std::string &id,
+								std::ostringstream &stream) const;
+
+	void
+	listShowingsForDay(const std::tm &day, std::ostringstream &stream) const;
+
+	void
+	bookShowing(const std::string &showing_id, const std::string &, int column,
+				std::ostringstream &stream);
 };
 
 

@@ -54,7 +54,9 @@ public:
 
 	std::string getSeats() const;
 
-	void book(char row, int column);
+	void book(char row, int column, std::ostringstream &stream);
+
+	virtual bool hasSeatsAvailble() const = 0;
 };
 
 

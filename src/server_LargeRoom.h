@@ -33,6 +33,8 @@ public:
 
 	// Overloading the assignment by movement
 	LargeRoom &operator=(LargeRoom &&other) noexcept;
+
+	bool hasSeatsAvailble() const override;
 };
 
 #endif //__SERVER_LARGE_ROOM_H__

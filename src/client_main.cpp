@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[]) {
 	if (argc != 3) {
-		std::cout << CLIENT_USAGE_PARAMETERS_HELP << std::endl;
+		std::cerr << CLIENT_USAGE_PARAMETERS_HELP << std::endl;
 		return CLIENT_INPUT_PARAMS_ERROR;
 	} else {
 		// Client receives ip, port

@@ -16,7 +16,6 @@ private:
 	std::chrono::system_clock::time_point
 	parseDatetime(std::string date, std::string time);
 	std::string printDatetime() const;
-
 public:
 	Showing(int id, Room* room, Movie movie,
 				 std::chrono::system_clock::time_point date);
@@ -50,7 +49,7 @@ public:
 
 	std::string getSeats() const;
 
-	void book(char row, int column);
+	void book(char row, int column, std::ostringstream &stream);
 
 	// Overloading the << operator but we make it friend to be
 	// callable from outside

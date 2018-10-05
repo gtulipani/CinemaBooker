@@ -1,3 +1,4 @@
+#include <iostream>
 #include "server_SmallRoom.h"
 
 int SmallRoom::getColumnsQuantity() const {
@@ -61,4 +62,19 @@ SmallRoom &SmallRoom::operator=(SmallRoom &&other) noexcept {
 	this->seats_matrix = other.seats_matrix;
 
 	return *this;
+}
+
+bool SmallRoom::hasSeatsAvailble() const {
+	bool at_least_one_seat_available = false;
+	int i = 0;
+	while ((i < SMALL_ROOM_ROWS_QUANTITY) && (!at_least_one_seat_available)) {
+		int j = 0;
+		while ((j < SMALL_ROOM_COLUMNS_QUANTITY) &&
+			   !at_least_one_seat_available) {
+			at_least_one_seat_available = seats_matrix[i][j];
+			j++;
+		}
+		i++;
+	}
+	return at_least_one_seat_available;
 }

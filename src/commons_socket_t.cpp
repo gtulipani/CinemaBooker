@@ -182,11 +182,9 @@ long socket_send_int(socket_t *self, int num) {
 }
 
 int socket_recv_int(socket_t *self, int *out) {
-	printf("Will actually receive int\n");
 	char buffer[PROTOCOL_INT_BYTES];
 	if (socket_recv(self, buffer, PROTOCOL_INT_BYTES) ==
 		SOCKET_CONNECTION_ERROR) {
-		printf("Socket returned error on int\n");
 		return SOCKET_CONNECTION_ERROR;
 	}
 	*out = from_big_endian(buffer);

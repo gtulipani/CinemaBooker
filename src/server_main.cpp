@@ -23,40 +23,20 @@ int main(int argc, char *argv[]) {
 			// Server receives port, roomsCsv, moviesCsv, showingsCsv
 			Server server(argv[1], argv[2], argv[3], argv[4]);
 			server.start();
-
-			/*std::cout << "Listing movies by language: ESP" << std::endl;
-			server.listMoviesByLanguage("ESP");
-
-			std::cout << "Listing movies by age: ATP" << std::endl;
-			server.listMoviesByAge("ATP");
-
-			std::cout << "Listing movies by genre: Terror" << std::endl;
-			server.listMoviesByGenre("Terror");
-
-			std::cout << "Listing showings for day: 13/10/2018" << std::endl;
-			std::tm tm = {};
-			std::stringstream ss("13/10/2018");
-			ss >> std::get_time(&tm, "%d/%m/%Y");
-			server.listShowingsForDay(tm);
-
-			std::cout << "Listing seats from showing id: 2" << std::endl;
-			server.listSeatsFromShowingId("2");
-
-			std::cout << "Booking seat with row A and column 1 in showing id 2"
-					  << std::endl;
-			server.bookShowing("2", 'A', 1);
-
-			std::cout << "Reprinting seats for that same showing" << std::endl;
-			server.listSeatsFromShowingId("2");*/
 		} catch (InputFileException &e) {
+			std::cerr << e.what() << std::endl;
 			return SERVER_INPUT_PARAMS_ERROR;
 		} catch (InvalidInputParamsException &e) {
+			std::cerr << e.what() << std::endl;
 			return SERVER_INPUT_FILES_ERROR;
 		} catch (ClientOperationException &e) {
+			std::cerr << e.what() << std::endl;
 			return SERVER_INPUT_FILES_ERROR;
 		} catch (std::runtime_error &e) {
+			std::cerr << e.what() << std::endl;
 			return SERVER_UNEXPECTED_ERROR;
 		} catch (...) {
+			std::cerr << "Unexpected error" << std::endl;
 			return SERVER_UNEXPECTED_ERROR;
 		}
 	}

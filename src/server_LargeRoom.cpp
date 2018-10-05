@@ -62,3 +62,17 @@ LargeRoom &LargeRoom::operator=(LargeRoom &&other) noexcept {
 
 	return *this;
 }
+
+bool LargeRoom::hasSeatsAvailble() const {
+	bool at_least_one_seat_available = false;
+	int i = 0;
+	while ((i < LARGE_ROOM_ROWS_QUANTITY) && (!at_least_one_seat_available)) {
+		int j = 0;
+		while ((j < LARGE_ROOM_COLUMNS_QUANTITY) && !at_least_one_seat_available) {
+			at_least_one_seat_available = seats_matrix[i][j];
+			j++;
+		}
+		i++;
+	}
+	return at_least_one_seat_available;
+}

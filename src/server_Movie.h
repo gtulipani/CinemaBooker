@@ -10,9 +10,9 @@ private:
 	std::string age_restriction;
 	std::string genre;
 
-	std::string validateLanguage(std::string language);
-	std::string validateAgeRestriction(std::string language);
-	std::string validateGenre(std::string genre);
+	std::string validateLanguage(std::string language) const;
+	std::string validateAgeRestriction(std::string language) const;
+	std::string validateGenre(std::string genre) const;
 public:
 	Movie(std::string title, std::string language, std::string age_restriction,
 		  std::string genre);

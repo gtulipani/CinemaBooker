@@ -6,12 +6,16 @@
 #include <algorithm>
 
 #include "server_Room.h"
-#include "server_SeatAlreadyBookedException.h"
 #include "server_InvalidInputParamsException.h"
+#include "server_ClientOperationException.h"
 
+#define SEATS_TITLE "Asientos:"
 #define ROW_SEPARATOR '\n'
 #define COLUMN_SEPARATOR '\t'
 #define ASCII_A int('A')
+
+#define SEAT_ALREADY_BOOKED_ERROR "ERROR: El asiento ya esta reservado"
+#define SEAT_BOOKED_SUCCESS "OK"
 
 std::string Room::validateType(std::string type) {
 	std::list<std::string> valid_type{"2D", "3D", "4D"};
@@ -96,37 +100,34 @@ std::string Room::getSeats() const {
 	std::ostringstream ss;
 	int columns_quantity = getColumnsQuantity();
 	int rows_quantity = getRowsQuantity();
+	ss << SEATS_TITLE << std::endl;
 	for (int i = 1; i <= columns_quantity; i++) {
 		ss << COLUMN_SEPARATOR << i;
 	}
-	ss << ROW_SEPARATOR;
 	for (int i = 1; i <= rows_quantity; i++) {
+		ss << ROW_SEPARATOR;
 		ss << getRowName(i);
 		for (int j = 1; j <= columns_quantity; j++) {
 			ss << COLUMN_SEPARATOR
 			   << getAvailabilitySign(isSeatAvailable(i, j));
 		}
-		ss << ROW_SEPARATOR;
 	}
 	return ss.str();
 }
 
-void Room::book(char row, int column) {
+void Room::book(char row, int column, std::ostringstream &stream) {
 	int row_number = getRowNumber(row);
 	int rows_quantity = getRowsQuantity();
 	int columns_quantity = getColumnsQuantity();
 	if ((row_number > rows_quantity) || (column > columns_quantity)) {
-		throw std::runtime_error(
+		throw ClientOperationException(
 				"Row or column passed as quantity is out of range");
 	}
 	if (!isSeatAvailable(row_number, column)) {
-		std::ostringstream ss;
-		ss << "Seat for row " + std::to_string(row) + " and column " +
-			  std::to_string(column) +
-			  " was already occupied.";
-		throw SeatAlreadyBookedException(ss.str());
+		stream << SEAT_ALREADY_BOOKED_ERROR << std::endl;
 	} else {
 		bookSeat(row_number, column);
+		stream << SEAT_BOOKED_SUCCESS << std::endl;;
 	}
 }
 

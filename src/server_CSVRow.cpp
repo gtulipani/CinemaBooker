@@ -1,5 +1,5 @@
 #include <sstream>
-#include "commons_CSVRow.h"
+#include "server_CSVRow.h"
 
 std::string const &CSVRow::operator[](std::size_t index) const {
 	return m_data[index];

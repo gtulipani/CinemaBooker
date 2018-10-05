@@ -62,3 +62,17 @@ MediumRoom &MediumRoom::operator=(MediumRoom &&other) noexcept {
 
 	return *this;
 }
+
+bool MediumRoom::hasSeatsAvailble() const {
+	bool at_least_one_seat_available = false;
+	int i = 0;
+	while ((i < MEDIUM_ROOM_ROWS_QUANTITY) && (!at_least_one_seat_available)) {
+		int j = 0;
+		while ((j < MEDIUM_ROOM_COLUMNS_QUANTITY) && !at_least_one_seat_available) {
+			at_least_one_seat_available = seats_matrix[i][j];
+			j++;
+		}
+		i++;
+	}
+	return at_least_one_seat_available;
+}

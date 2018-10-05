@@ -1,4 +1,4 @@
 #include "server_InputFileException.h"
 
-InputFileException::InputFileException()
-		: runtime_error("") {}
+InputFileException::InputFileException(std::string file_path)
+		: runtime_error("El archivo " + file_path + " no existe.") {}

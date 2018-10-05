@@ -2,7 +2,7 @@
 #define __CSV_ITERATOR_H__
 
 #include <istream>
-#include "commons_CSVRow.h"
+#include "server_CSVRow.h"
 
 class CSVIterator {
 public:

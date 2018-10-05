@@ -22,13 +22,13 @@ void Client::start() {
 		socket.send_int(static_cast<int>(input_size));
 		socket.send(std::move(input), input_size);
 
-		long bytes_received = 0;
-		do {
-			bytes_received = socket.receive(output, CHUNK_SIZE);
-			if (bytes_received > 0) {
-				// Print the message in std::cout
-				std::cout << output;
-			}
-		} while (bytes_received > 0);
+		// The quantity of bytes to expect
+		auto expected_bytes = static_cast<unsigned long>(socket.receive_int());
+		while (expected_bytes > 0) {
+			unsigned long chunk_size = (expected_bytes < CHUNK_SIZE)
+									   ? expected_bytes : CHUNK_SIZE;
+			expected_bytes -= socket.receive(output, chunk_size);
+			std::cout << output;
+		}
 	}
 }

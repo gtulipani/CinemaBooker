@@ -6,32 +6,36 @@
 #include "server_Movie.h"
 #include "server_InvalidInputParamsException.h"
 
-std::string Movie::validateLanguage(std::string language) {
+#define INVALID_LANGUAGE_MESSAGE "Idioma no reconocido"
+#define INVALID_AGE_MESSAGE "Edad no reconocida"
+#define INVALID_GENRE_MESSAGE "Genero no reconocido"
+
+std::string Movie::validateLanguage(std::string language) const {
 	std::list<std::string> valid_languages{"ESP", "SUB"};
 	if ((std::find(valid_languages.begin(), valid_languages.end(),
 				language)) == valid_languages.end()) {
-		throw InvalidInputParamsException("Invalid Language");
+		throw InvalidInputParamsException(INVALID_LANGUAGE_MESSAGE);
 	} else {
 		return language;
 	}
 }
 
-std::string Movie::validateAgeRestriction(std::string age_restriction) {
+std::string Movie::validateAgeRestriction(std::string age_restriction) const {
 	std::list<std::string> valid_age_restrictions{"ATP", "+13", "+18"};
 	if ((std::find(valid_age_restrictions.begin(), valid_age_restrictions.end(),
 				   age_restriction)) == valid_age_restrictions.end()) {
-		throw InvalidInputParamsException("Invalid Age Restriction");
+		throw InvalidInputParamsException(INVALID_AGE_MESSAGE);
 	} else {
 		return age_restriction;
 	}
 }
 
-std::string Movie::validateGenre(std::string genre) {
+std::string Movie::validateGenre(std::string genre) const {
 	std::list<std::string> valid_genres{"Drama", "Accion", "Comedia",
 										"Animacion", "Terror", "Suspenso"};
 	if ((std::find(valid_genres.begin(), valid_genres.end(),
 			genre)) == valid_genres.end()) {
-		throw InvalidInputParamsException("Invalid Genre");
+		throw InvalidInputParamsException(INVALID_GENRE_MESSAGE);
 	} else {
 		return genre;
 	}
@@ -102,13 +106,16 @@ bool Movie::hasTitle(std::string title) const {
 }
 
 bool Movie::hasLanguage(std::string language) const {
+	validateLanguage(language);
 	return (this->language == language);
 }
 
 bool Movie::hasAgeRestriction(std::string age_restriction) const {
+	validateAgeRestriction(age_restriction);
 	return (this->age_restriction == age_restriction);
 }
 
 bool Movie::hasGenre(std::string genre) const {
+	validateGenre(genre);
 	return (this->genre == genre);
 }

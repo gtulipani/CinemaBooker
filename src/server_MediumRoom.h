@@ -33,6 +33,8 @@ public:
 
 	// Overloading the assignment by movement
 	MediumRoom &operator=(MediumRoom &&other) noexcept;
+
+	bool hasSeatsAvailble() const override;
 };
 
 

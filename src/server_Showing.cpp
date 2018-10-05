@@ -6,6 +6,7 @@
 #include "server_Showing.h"
 
 #define DATE_TIME_OUTPUT_FORMAT "(DD/MM/AAAA) - (hh:mm)"
+#define NO_SEATS_AVAILABLE_MESSAGE "AGOTADA"
 
 std::chrono::system_clock::time_point
 Showing::parseDatetime(std::string date, std::string time) {
@@ -99,6 +100,9 @@ Showing::operator std::string() const {
 	std::ostringstream ss;
 	ss << id << ": <Funcion para \"" << (std::string) movie << "\" en la sala "
 	   << (std::string) *room << " con fecha " << printDatetime() << ">";
+	if (!room->hasSeatsAvailble()) {
+		ss << " " << NO_SEATS_AVAILABLE_MESSAGE;
+	}
 	return ss.str();
 }
 
@@ -116,6 +120,6 @@ std::string Showing::getSeats() const {
 	return room->getSeats();
 }
 
-void Showing::book(char row, int column) {
-	room->book(row, column);
+void Showing::book(char row, int column, std::ostringstream &stream) {
+	room->book(row, column, stream);
 }
