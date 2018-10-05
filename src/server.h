@@ -15,9 +15,11 @@
 class Server {
 private:
 	std::string port;
-	std::vector<Room *> rooms;
 	std::vector<Movie> movies;
+	std::vector<Room *> rooms;
 	std::vector<Showing> showings;
+
+	static void deleteRooms(std::vector<Room *> rooms);
 
 	std::vector<std::string> split(const std::string &s, char delimiter);
 
@@ -35,8 +37,7 @@ private:
 	parseShowingsCsv(std::string showingsCsvFilePath);
 
 public:
-	Server(std::string port, std::vector<Room *> rooms,
-		   std::vector<Movie> movies, std::string showings_csv_file_path);
+	Server(std::string port, std::vector<Movie> movies, std::vector<Room *> rooms, std::string showings_csv_file_path);
 
 	Server(std::string port, std::string rooms_csv_file_path,
 		   std::string movies_csv_file_path,

@@ -12,6 +12,7 @@
 #include "server_InputFileException.h"
 #include "server_InvalidInputParamsException.h"
 #include "server_ClientOperationException.h"
+#include "server_ShowingsInputFileException.h"
 #include "commons_Socket.h"
 
 #define LIST_BY_LANGUAGE_OPERATION_IDENTIFIER "IDIOMA"
@@ -37,6 +38,12 @@ std::ostream &operator<<(std::ostream &out, const Movie &movie) {
 std::ostream &operator<<(std::ostream &out, const Showing &movie_showing) {
 	out << (std::string) movie_showing;
 	return out;
+}
+
+void Server::deleteRooms(std::vector<Room *> rooms) {
+	std::for_each(rooms.begin(), rooms.end(), [](Room *room) {
+		delete room;
+	});
 }
 
 std::vector<std::string> Server::split(const std::string &s, char delimiter) {
@@ -112,7 +119,7 @@ std::vector<Room *> Server::parseRoomsCsv(std::string roomsCsvFilePath) {
 	}
 	for (CSVIterator iterator(input_stream);
 		 iterator != CSVIterator(); ++iterator) {
-		rooms.push_back(
+		rooms.emplace_back(
 				RoomCreator::factoryMethod((*iterator)[0], (*iterator)[1],
 										   (*iterator)[2]));
 	}
@@ -130,8 +137,9 @@ Server::parseMoviesCsv(std::string moviesCsvFilePath) {
 	}
 	for (CSVIterator iterator(input_stream);
 		 iterator != CSVIterator(); ++iterator) {
-		movies.push_back(Movie((*iterator)[0], (*iterator)[1], (*iterator)[2],
-							   (*iterator)[3]));
+		movies.emplace_back(
+				Movie((*iterator)[0], (*iterator)[1], (*iterator)[2],
+					  (*iterator)[3]));
 	}
 	return movies;
 }
@@ -142,12 +150,12 @@ Server::parseShowingsCsv(std::string showingsCsvFilePath) {
 	std::fstream input_stream;
 	input_stream.open(showingsCsvFilePath, std::ios::in);
 	if (input_stream.fail()) {
-		throw InputFileException(showingsCsvFilePath);
+		throw ShowingsInputFileException(showingsCsvFilePath);
 	}
 	int showing_id = 1;
 	for (CSVIterator iterator(input_stream);
 		 iterator != CSVIterator(); ++iterator) {
-		movie_showings.push_back(Showing(
+		movie_showings.emplace_back(Showing(
 				showing_id++,
 				getRoomWithId((*iterator)[0]),
 				getMovieWithTitle((*iterator)[1]),
@@ -157,27 +165,30 @@ Server::parseShowingsCsv(std::string showingsCsvFilePath) {
 	return movie_showings;
 }
 
-Server::Server(std::string port, std::vector<Room *> rooms,
-			   std::vector<Movie> movies,
+Server::Server(std::string port, std::vector<Movie> movies,
+			   std::vector<Room *> rooms,
 			   std::string showings_csv_file_path) :
 		port(std::move(port)),
-		rooms(std::move(rooms)),
-		movies(std::move(movies)) {
-	showings = parseShowingsCsv(std::move(showings_csv_file_path));
+		movies(std::move(movies)),
+		rooms(std::move(rooms)) {
+	try {
+		showings = parseShowingsCsv(std::move(showings_csv_file_path));
+	} catch (ShowingsInputFileException &e) {
+		Server::deleteRooms(this->rooms);
+		throw e;
+	}
 }
 
 Server::Server(std::string port, std::string rooms_csv_file_path,
 			   std::string movies_csv_file_path,
 			   std::string showings_csv_file_path) :
 		Server(std::move(port),
-			   parseRoomsCsv(std::move(rooms_csv_file_path)),
 			   parseMoviesCsv(std::move(movies_csv_file_path)),
+			   parseRoomsCsv(std::move(rooms_csv_file_path)),
 			   std::move(showings_csv_file_path)) {}
 
 Server::~Server() {
-	std::for_each(rooms.begin(), rooms.end(), [](Room *room) {
-		delete room;
-	});
+	deleteRooms(rooms);
 }
 
 void Server::start() {

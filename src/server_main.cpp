@@ -15,6 +15,7 @@
 #define SERVER_UNEXPECTED_ERROR 3
 
 int main(int argc, char *argv[]) {
+	int program_result = SERVER_PROGRAM_RESULT_SUCCESS;
 	if (argc != 5) {
 		std::cout << SERVER_USAGE_PARAMETERS_HELP << std::endl;
 		return SERVER_INPUT_PARAMS_ERROR;
@@ -25,20 +26,21 @@ int main(int argc, char *argv[]) {
 			server.start();
 		} catch (InputFileException &e) {
 			std::cerr << e.what() << std::endl;
-			return SERVER_INPUT_PARAMS_ERROR;
+			program_result = SERVER_INPUT_PARAMS_ERROR;
 		} catch (InvalidInputParamsException &e) {
 			std::cerr << e.what() << std::endl;
-			return SERVER_INPUT_FILES_ERROR;
+			program_result = SERVER_INPUT_FILES_ERROR;
 		} catch (ClientOperationException &e) {
 			std::cerr << e.what() << std::endl;
-			return SERVER_INPUT_FILES_ERROR;
+			program_result = SERVER_INPUT_FILES_ERROR;
 		} catch (std::runtime_error &e) {
 			std::cerr << e.what() << std::endl;
-			return SERVER_UNEXPECTED_ERROR;
+			program_result = SERVER_UNEXPECTED_ERROR;
 		} catch (...) {
 			std::cerr << "Unexpected error" << std::endl;
-			return SERVER_UNEXPECTED_ERROR;
+			program_result = SERVER_UNEXPECTED_ERROR;
 		}
 	}
-	return SERVER_PROGRAM_RESULT_SUCCESS;
+	std::cout << "Finishing program..." << std::endl;
+	return program_result;
 }
