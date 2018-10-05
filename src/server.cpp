@@ -103,8 +103,8 @@ Movie Server::getMovieWithTitle(std::string title) {
 	}
 }
 
-std::set<Room *> Server::parseRoomsCsv(std::string roomsCsvFilePath) {
-	std::set<Room *> rooms;
+std::vector<Room *> Server::parseRoomsCsv(std::string roomsCsvFilePath) {
+	std::vector<Room *> rooms;
 	std::fstream input_stream;
 	input_stream.open(roomsCsvFilePath, std::ios::in);
 	if (input_stream.fail()) {
@@ -112,16 +112,17 @@ std::set<Room *> Server::parseRoomsCsv(std::string roomsCsvFilePath) {
 	}
 	for (CSVIterator iterator(input_stream);
 		 iterator != CSVIterator(); ++iterator) {
-		rooms.insert(RoomCreator::factoryMethod((*iterator)[0], (*iterator)[1],
-												(*iterator)[2]));
+		rooms.push_back(
+				RoomCreator::factoryMethod((*iterator)[0], (*iterator)[1],
+										   (*iterator)[2]));
 	}
 
 	return rooms;
 }
 
-std::set<Movie>
+std::vector<Movie>
 Server::parseMoviesCsv(std::string moviesCsvFilePath) {
-	std::set<Movie> movies;
+	std::vector<Movie> movies;
 	std::fstream input_stream;
 	input_stream.open(moviesCsvFilePath, std::ios::in);
 	if (input_stream.fail()) {
@@ -129,15 +130,15 @@ Server::parseMoviesCsv(std::string moviesCsvFilePath) {
 	}
 	for (CSVIterator iterator(input_stream);
 		 iterator != CSVIterator(); ++iterator) {
-		movies.insert(Movie((*iterator)[0], (*iterator)[1], (*iterator)[2],
-							(*iterator)[3]));
+		movies.push_back(Movie((*iterator)[0], (*iterator)[1], (*iterator)[2],
+							   (*iterator)[3]));
 	}
 	return movies;
 }
 
-std::set<Showing>
+std::vector<Showing>
 Server::parseShowingsCsv(std::string showingsCsvFilePath) {
-	std::set<Showing> movie_showings;
+	std::vector<Showing> movie_showings;
 	std::fstream input_stream;
 	input_stream.open(showingsCsvFilePath, std::ios::in);
 	if (input_stream.fail()) {
@@ -146,7 +147,7 @@ Server::parseShowingsCsv(std::string showingsCsvFilePath) {
 	int showing_id = 1;
 	for (CSVIterator iterator(input_stream);
 		 iterator != CSVIterator(); ++iterator) {
-		movie_showings.insert(Showing(
+		movie_showings.push_back(Showing(
 				showing_id++,
 				getRoomWithId((*iterator)[0]),
 				getMovieWithTitle((*iterator)[1]),
@@ -156,8 +157,8 @@ Server::parseShowingsCsv(std::string showingsCsvFilePath) {
 	return movie_showings;
 }
 
-Server::Server(std::string port, std::set<Room *> rooms,
-			   std::set<Movie> movies,
+Server::Server(std::string port, std::vector<Room *> rooms,
+			   std::vector<Movie> movies,
 			   std::string showings_csv_file_path) :
 		port(std::move(port)),
 		rooms(std::move(rooms)),
@@ -202,16 +203,16 @@ void Server::start() {
 void
 Server::listMoviesByLanguage(const std::string &language,
 							 std::ostringstream &stream) const {
-	std::set<Movie> filtered_set;
+	std::vector<Movie> filtered_vector;
 	try {
 		std::copy_if(
 				movies.begin(),
 				movies.end(),
-				std::inserter(filtered_set, filtered_set.end()),
+				std::inserter(filtered_vector, filtered_vector.end()),
 				[language](const Movie &m) {
 					return m.hasLanguage(language);
 				});
-		std::for_each(filtered_set.begin(), filtered_set.end(),
+		std::for_each(filtered_vector.begin(), filtered_vector.end(),
 					  [&stream](const Movie &m) {
 						  stream << m << std::endl;
 					  });
@@ -224,16 +225,16 @@ Server::listMoviesByLanguage(const std::string &language,
 void
 Server::listMoviesByAge(const std::string &age_restriction,
 						std::ostringstream &stream) const {
-	std::set<Movie> filtered_set;
+	std::vector<Movie> filtered_vector;
 	try {
 		std::copy_if(
 				movies.begin(),
 				movies.end(),
-				std::inserter(filtered_set, filtered_set.end()),
+				std::inserter(filtered_vector, filtered_vector.end()),
 				[age_restriction](const Movie &m) {
 					return m.hasAgeRestriction(age_restriction);
 				});
-		std::for_each(filtered_set.begin(), filtered_set.end(),
+		std::for_each(filtered_vector.begin(), filtered_vector.end(),
 					  [&stream](const Movie &m) {
 						  stream << m << std::endl;
 					  });
@@ -245,16 +246,16 @@ Server::listMoviesByAge(const std::string &age_restriction,
 void
 Server::listMoviesByGenre(const std::string &genre,
 						  std::ostringstream &stream) const {
-	std::set<Movie> filtered_set;
+	std::vector<Movie> filtered_vector;
 	try {
 		std::copy_if(
 				movies.begin(),
 				movies.end(),
-				std::inserter(filtered_set, filtered_set.end()),
+				std::inserter(filtered_vector, filtered_vector.end()),
 				[genre](const Movie &m) {
 					return m.hasGenre(genre);
 				});
-		std::for_each(filtered_set.begin(), filtered_set.end(),
+		std::for_each(filtered_vector.begin(), filtered_vector.end(),
 					  [&stream](const Movie &m) {
 						  stream << m << std::endl;
 					  });
@@ -266,15 +267,15 @@ Server::listMoviesByGenre(const std::string &genre,
 void
 Server::listSeatsFromShowingId(const std::string &id,
 							   std::ostringstream &stream) const {
-	std::set<Showing> filtered_set;
+	std::vector<Showing> filtered_vector;
 	std::copy_if(
 			showings.begin(),
 			showings.end(),
-			std::inserter(filtered_set, filtered_set.end()),
+			std::inserter(filtered_vector, filtered_vector.end()),
 			[id](const Showing &s) {
 				return s.hasId(id);
 			});
-	std::for_each(filtered_set.begin(), filtered_set.end(),
+	std::for_each(filtered_vector.begin(), filtered_vector.end(),
 				  [&stream](const Showing &s) {
 					  stream << s << std::endl;
 					  stream << s.getSeats() << std::endl;
@@ -283,15 +284,15 @@ Server::listSeatsFromShowingId(const std::string &id,
 
 void Server::listShowingsForDay(const std::tm &day,
 								std::ostringstream &stream) const {
-	std::set<Showing> filtered_set;
+	std::vector<Showing> filtered_vector;
 	std::copy_if(
 			showings.begin(),
 			showings.end(),
-			std::inserter(filtered_set, filtered_set.end()),
+			std::inserter(filtered_vector, filtered_vector.end()),
 			[day](const Showing &s) {
 				return s.hasDay(day);
 			});
-	std::for_each(filtered_set.begin(), filtered_set.end(),
+	std::for_each(filtered_vector.begin(), filtered_vector.end(),
 				  [&stream](Showing s) {
 					  stream << s << std::endl;
 				  });
@@ -301,15 +302,13 @@ void Server::bookShowing(const std::string &showing_id, const std::string &row,
 						 int column,
 						 std::ostringstream &stream) {
 	char row_identifier = row[0];
-	bool showing_found = false;
-	std::for_each(showings.begin(), showings.end(),
-				  [&](Showing movie_showing) {
-					  if (movie_showing.hasId(showing_id)) {
-						  showing_found = true;
-						  movie_showing.book(row_identifier, column, stream);
-					  }
-				  });
-	if (!showing_found) {
+	auto it = std::find_if(showings.begin(), showings.end(),
+						   [&](Showing s) {
+							   return s.hasId(showing_id);
+						   });
+	if (it != showings.end()) {
+		it->book(row_identifier, column, stream);
+	} else {
 		throw ClientOperationException("Seat exceeds valid range");
 	}
 }

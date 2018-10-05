@@ -3,7 +3,6 @@
 
 #include <string>
 #include <unordered_set>
-#include <set>
 #include <vector>
 #include <map>
 
@@ -16,9 +15,9 @@
 class Server {
 private:
 	std::string port;
-	std::set<Room *> rooms;
-	std::set<Movie> movies;
-	std::set<Showing> showings;
+	std::vector<Room *> rooms;
+	std::vector<Movie> movies;
+	std::vector<Showing> showings;
 
 	std::vector<std::string> split(const std::string &s, char delimiter);
 
@@ -28,16 +27,16 @@ private:
 
 	Movie getMovieWithTitle(std::string title);
 
-	std::set<Room *> parseRoomsCsv(std::string roomsCsvFilePath);
+	std::vector<Room *> parseRoomsCsv(std::string roomsCsvFilePath);
 
-	std::set<Movie> parseMoviesCsv(std::string moviesCsvFilePath);
+	std::vector<Movie> parseMoviesCsv(std::string moviesCsvFilePath);
 
-	std::set<Showing>
+	std::vector<Showing>
 	parseShowingsCsv(std::string showingsCsvFilePath);
 
 public:
-	Server(std::string port, std::set<Room *> rooms,
-		   std::set<Movie> movies, std::string showings_csv_file_path);
+	Server(std::string port, std::vector<Room *> rooms,
+		   std::vector<Movie> movies, std::string showings_csv_file_path);
 
 	Server(std::string port, std::string rooms_csv_file_path,
 		   std::string movies_csv_file_path,
