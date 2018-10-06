@@ -4,6 +4,5 @@ CMakeLists.txt
 .idea
 src/server
 src/client
-src/*.csv
 src/*.dSYM
 src/*.out
