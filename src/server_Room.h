@@ -4,25 +4,33 @@
 #include <string>
 #include <array>
 
-template <class T, int ROW, int COL>
+template<class T, int ROW, int COL>
 using Matrix = std::array<std::array<T, COL>, ROW>;
 
 class Room {
 private:
 	char getRowName(int row) const;
+
 	int getRowNumber(char row) const;
+
 	char getAvailabilitySign(bool result) const;
 
 	std::string validateType(std::string type);
+
 protected:
 	std::string id;
 	std::string type;
 
 	virtual int getColumnsQuantity() const = 0;
+
 	virtual int getRowsQuantity() const = 0;
+
 	virtual bool isSeatAvailable(int row, int column) const = 0;
+
 	virtual void bookSeat(int row, int column) = 0;
+
 	virtual void initializeSeats() = 0;
+
 public:
 	Room(std::string id_as_string, std::string room_type);
 

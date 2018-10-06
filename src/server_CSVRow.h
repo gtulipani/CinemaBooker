@@ -6,7 +6,7 @@
 
 class CSVRow {
 private:
-	std::vector <std::string> m_data;
+	std::vector<std::string> m_data;
 public:
 	std::string const &operator[](std::size_t index) const;
 

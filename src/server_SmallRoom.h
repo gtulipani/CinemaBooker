@@ -2,6 +2,8 @@
 #define __SERVER_SMALL_ROOM_H__
 
 #include <array>
+#include <string>
+
 #include "server_Room.h"
 
 #define SMALL_ROOM_ROWS_QUANTITY 5
@@ -9,13 +11,20 @@
 
 class SmallRoom : public Room {
 private:
-	Matrix<bool, SMALL_ROOM_ROWS_QUANTITY, SMALL_ROOM_COLUMNS_QUANTITY> seats_matrix;
+	Matrix<bool, SMALL_ROOM_ROWS_QUANTITY, SMALL_ROOM_COLUMNS_QUANTITY>
+	        seats_matrix;
+
 protected:
 	int getColumnsQuantity() const override;
+
 	int getRowsQuantity() const override;
+
 	bool isSeatAvailable(int row, int column) const override;
+
 	void bookSeat(int row, int column) override;
+
 	void initializeSeats() override;
+
 public:
 	SmallRoom(std::string id_as_string, std::string room_type);
 

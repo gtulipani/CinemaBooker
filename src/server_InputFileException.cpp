@@ -1,3 +1,5 @@
+#include <string>
+
 #include "server_InputFileException.h"
 
 InputFileException::InputFileException(std::string file_path)

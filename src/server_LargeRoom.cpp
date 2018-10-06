@@ -1,3 +1,5 @@
+#include <string>
+
 #include "server_LargeRoom.h"
 
 int LargeRoom::getColumnsQuantity() const {
@@ -68,7 +70,8 @@ bool LargeRoom::hasSeatsAvailble() const {
 	int i = 0;
 	while ((i < LARGE_ROOM_ROWS_QUANTITY) && (!at_least_one_seat_available)) {
 		int j = 0;
-		while ((j < LARGE_ROOM_COLUMNS_QUANTITY) && !at_least_one_seat_available) {
+		while ((j < LARGE_ROOM_COLUMNS_QUANTITY) &&
+			   !at_least_one_seat_available) {
 			at_least_one_seat_available = seats_matrix[i][j];
 			j++;
 		}

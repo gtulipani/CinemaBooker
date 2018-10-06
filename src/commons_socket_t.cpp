@@ -160,8 +160,8 @@ long socket_recv(socket_t *self, char *buffer,
 	bool result = true;
 	while (are_we_connected && (received < chunk_size)) {
 		s = (int) recv(self->fd, &buffer[received],
-							   (chunk_size - received),
-							   MSG_NOSIGNAL);
+					   (chunk_size - received),
+					   MSG_NOSIGNAL);
 
 		if (s == 0) { // Socket closed
 			are_we_connected = false;

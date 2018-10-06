@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <mutex>
+#include <string>
 
 #include "server_Room.h"
 #include "server_Movie.h"
@@ -14,11 +15,13 @@ private:
 	std::vector<Movie> &movies;
 	std::vector<Room *> &rooms;
 	std::vector<Showing> &showings;
+
 public:
 	CinemaMonitor(std::vector<Movie> &movies, std::vector<Room *> &rooms,
 				  std::vector<Showing> &showings);
 
-	// Disabling the constructor by copy because it contains references that may be modified
+	// Disabling the constructor by copy because it contains references
+	// that may be modified
 	CinemaMonitor(const CinemaMonitor &other) = delete;
 
 	CinemaMonitor(CinemaMonitor &&other) noexcept;
@@ -41,10 +44,12 @@ public:
 	listShowingsForDay(const std::tm &day, std::ostringstream &stream);
 
 	void
-	bookShowing(const std::string &showing_id, const std::string &row, int column,
+	bookShowing(const std::string &showing_id, const std::string &row,
+				int column,
 				std::ostringstream &stream);
 
-	// Disabling the assignment by copy because it contains references that may be modified
+	// Disabling the assignment by copy because it contains references
+	// that may be modified
 	CinemaMonitor &operator=(const CinemaMonitor &other) = delete;
 
 	// Overloading the assignment by movement

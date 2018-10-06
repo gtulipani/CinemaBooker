@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <string>
+#include <vector>
 
 #include "server_ClientThread.h"
 #include "server_ClientOperationException.h"

@@ -7,8 +7,6 @@
 #include "server_ClientOperationException.h"
 #include "server_InvalidInputParamsException.h"
 
-#define SERVER_USAGE_PARAMETERS_HELP "Uso: ./server <puerto> <salas.csv> <peliculas.csv> <funciones.csv>"
-
 #define SERVER_PROGRAM_RESULT_SUCCESS 0
 #define SERVER_INPUT_PARAMS_ERROR 1
 #define SERVER_INPUT_FILES_ERROR 2
@@ -17,7 +15,8 @@
 int main(int argc, char *argv[]) {
 	int program_result = SERVER_PROGRAM_RESULT_SUCCESS;
 	if (argc != 5) {
-		std::cout << SERVER_USAGE_PARAMETERS_HELP << std::endl;
+		std::cout << "Uso: ./server <puerto> <salas.csv> <peliculas.csv> "
+				  << "<funciones.csv>" << std::endl;
 		return SERVER_INPUT_PARAMS_ERROR;
 	} else {
 		try {

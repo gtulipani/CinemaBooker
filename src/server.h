@@ -10,7 +10,6 @@
 #include "server_Movie.h"
 #include "server_Showing.h"
 #include "commons_Socket.h"
-#include "server_Operation.h"
 
 class Server {
 private:
@@ -33,7 +32,8 @@ private:
 	parseShowingsCsv(std::string showingsCsvFilePath);
 
 public:
-	Server(std::string port, std::vector<Movie> movies, std::vector<Room *> rooms, std::string showings_csv_file_path);
+	Server(std::string port, std::vector<Movie> movies,
+		   std::vector<Room *> rooms, std::string showings_csv_file_path);
 
 	Server(std::string port, std::string rooms_csv_file_path,
 		   std::string movies_csv_file_path,

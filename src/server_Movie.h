@@ -11,15 +11,18 @@ private:
 	std::string genre;
 
 	std::string validateLanguage(std::string language) const;
+
 	std::string validateAgeRestriction(std::string language) const;
+
 	std::string validateGenre(std::string genre) const;
+
 public:
 	Movie(std::string title, std::string language, std::string age_restriction,
 		  std::string genre);
 
 	Movie(const Movie &other);
 
-	Movie(Movie&& other) noexcept;
+	Movie(Movie &&other) noexcept;
 
 	// Define hash function in order to work with std:unordered_set
 	size_t const hash() const;
@@ -31,10 +34,10 @@ public:
 	bool operator==(const Movie &other) const;
 
 	// Overloading the assignment by copy
-	Movie& operator=(const Movie &other);
+	Movie &operator=(const Movie &other);
 
 	// Overloading the assignment by movement
-	Movie& operator=(Movie&& other) noexcept;
+	Movie &operator=(Movie &&other) noexcept;
 
 	// Overloading the std::string casting to obtain the title
 	explicit operator std::string() const;

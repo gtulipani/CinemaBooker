@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <vector>
 
 #include "server_CSVIterator.h"
 #include "server.h"

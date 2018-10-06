@@ -1,5 +1,7 @@
 #include <sstream>
 #include <algorithm>
+#include <string>
+#include <vector>
 
 #include "server_CinemaMonitor.h"
 #include "server_InvalidInputParamsException.h"
@@ -50,8 +52,9 @@ CinemaMonitor::listMoviesByLanguage(const std::string &language,
 					  [&stream](const Movie &m) {
 						  stream << m << std::endl;
 					  });
+		stream << std::endl;
 	} catch (InvalidInputParamsException &e) {
-		stream << e.what() << std::endl;
+		stream << e.what() << std::endl << std::endl;
 	}
 }
 
@@ -72,8 +75,9 @@ CinemaMonitor::listMoviesByAge(const std::string &age_restriction,
 					  [&stream](const Movie &m) {
 						  stream << m << std::endl;
 					  });
+		stream << std::endl;
 	} catch (InvalidInputParamsException &e) {
-		stream << e.what() << std::endl;
+		stream << e.what() << std::endl << std::endl;
 	}
 }
 
@@ -93,8 +97,9 @@ void CinemaMonitor::listMoviesByGenre(const std::string &genre,
 					  [&stream](const Movie &m) {
 						  stream << m << std::endl;
 					  });
+		stream << std::endl;
 	} catch (InvalidInputParamsException &e) {
-		stream << e.what() << std::endl;
+		stream << e.what() << std::endl << std::endl;
 	}
 }
 
@@ -114,6 +119,7 @@ void CinemaMonitor::listSeatsFromShowingId(const std::string &id,
 					  stream << s << std::endl;
 					  stream << s.getSeats() << std::endl;
 				  });
+	stream << std::endl;
 }
 
 void
@@ -132,6 +138,7 @@ CinemaMonitor::listShowingsForDay(const std::tm &day,
 				  [&stream](Showing s) {
 					  stream << s << std::endl;
 				  });
+	stream << std::endl;
 }
 
 void
@@ -147,6 +154,7 @@ CinemaMonitor::bookShowing(const std::string &showing_id,
 						   });
 	if (it != showings.end()) {
 		it->book(row_identifier, column, stream);
+		stream << std::endl;
 	} else {
 		throw ClientOperationException("Seat exceeds valid range");
 	}

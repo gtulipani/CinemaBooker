@@ -5,7 +5,7 @@
 
 class ConnectionRefusedException : public std::runtime_error {
 public:
-	explicit ConnectionRefusedException();
+	ConnectionRefusedException();
 };
 
 

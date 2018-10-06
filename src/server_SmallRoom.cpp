@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+
 #include "server_SmallRoom.h"
 
 int SmallRoom::getColumnsQuantity() const {

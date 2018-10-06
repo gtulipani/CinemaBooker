@@ -13,7 +13,7 @@
 std::string Movie::validateLanguage(std::string language) const {
 	std::list<std::string> valid_languages{"ESP", "SUB"};
 	if ((std::find(valid_languages.begin(), valid_languages.end(),
-				language)) == valid_languages.end()) {
+				   language)) == valid_languages.end()) {
 		throw InvalidInputParamsException(INVALID_LANGUAGE_MESSAGE);
 	} else {
 		return language;
@@ -34,7 +34,7 @@ std::string Movie::validateGenre(std::string genre) const {
 	std::list<std::string> valid_genres{"Drama", "Accion", "Comedia",
 										"Animacion", "Terror", "Suspenso"};
 	if ((std::find(valid_genres.begin(), valid_genres.end(),
-			genre)) == valid_genres.end()) {
+				   genre)) == valid_genres.end()) {
 		throw InvalidInputParamsException(INVALID_GENRE_MESSAGE);
 	} else {
 		return genre;

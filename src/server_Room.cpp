@@ -41,8 +41,8 @@ char Room::getAvailabilitySign(bool result) const {
 }
 
 Room::Room(std::string id, std::string room_type) :
-	id(std::move(id)),
-	type(validateType(std::move(room_type))) {}
+		id(std::move(id)),
+		type(validateType(std::move(room_type))) {}
 
 Room::Room(const Room &other) : Room(
 		other.id,

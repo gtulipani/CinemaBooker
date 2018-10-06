@@ -2,6 +2,8 @@
 #define __SERVER_MEDIUM_ROOM_H__
 
 #include <array>
+#include <string>
+
 #include "server_Room.h"
 
 #define MEDIUM_ROOM_ROWS_QUANTITY 10
@@ -9,13 +11,20 @@
 
 class MediumRoom : public Room {
 private:
-	Matrix<bool, MEDIUM_ROOM_ROWS_QUANTITY, MEDIUM_ROOM_COLUMNS_QUANTITY> seats_matrix;
+	Matrix<bool, MEDIUM_ROOM_ROWS_QUANTITY, MEDIUM_ROOM_COLUMNS_QUANTITY>
+			seats_matrix;
+
 protected:
 	int getColumnsQuantity() const override;
+
 	int getRowsQuantity() const override;
+
 	bool isSeatAvailable(int row, int column) const override;
+
 	void bookSeat(int row, int column) override;
+
 	void initializeSeats() override;
+
 public:
 	MediumRoom(std::string id_as_string, std::string room_type);
 

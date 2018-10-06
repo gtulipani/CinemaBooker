@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <vector>
 
 #include "server_AccepterThread.h"
 #include "server_ClientThread.h"
@@ -19,12 +20,13 @@ void AccepterThread::run() {
 													monitor);
 			client->start();
 			threads.emplace_back(client);
-			std::for_each(threads.begin(), threads.end(), [&](Thread *client) {
-				if (client->isDead()) {
-					client->join();
-					delete client;
+			for (auto it = threads.begin(); it != threads.end(); it++) {
+				if ((*it)->isDead()) {
+					(*it)->join();
+					delete (*it);
+					threads.erase(it);
 				}
-			});
+			}
 		}
 	} catch (ConnectionRefusedException &ignored) {
 		// Accept will throw this exception when the server closes the socket

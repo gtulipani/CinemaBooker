@@ -1,6 +1,9 @@
 #ifndef __SERVER_CLIENT_THREAD_H__
 #define __SERVER_CLIENT_THREAD_H__
 
+#include <string>
+#include <vector>
+
 #include "commons_Socket.h"
 #include "server_Thread.h"
 #include "server_CinemaMonitor.h"
@@ -13,6 +16,7 @@ private:
 	std::vector<std::string> split(const std::string &s, char delimiter);
 
 	void processCommand(const std::string &input, Socket &client_socket);
+
 public:
 	explicit ClientThread(Socket socket, CinemaMonitor &monitor);
 

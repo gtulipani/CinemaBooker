@@ -5,7 +5,7 @@
 
 class ClientClosedSocketException : public std::runtime_error {
 public:
-	explicit ClientClosedSocketException();
+	ClientClosedSocketException();
 };
 
 

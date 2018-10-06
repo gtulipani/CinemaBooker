@@ -113,7 +113,7 @@ void Socket::close() {
 	}
 }
 
-Socket& Socket::operator=(Socket&& other) noexcept {
+Socket &Socket::operator=(Socket &&other) noexcept {
 	if (this == &other) {
 		return *this; // other is myself!
 	}

@@ -12,6 +12,7 @@ private:
 	socket_t skt;
 
 	socket_t *getSkt();
+
 public:
 	Socket();
 

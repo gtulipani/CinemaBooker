@@ -2,6 +2,7 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <string>
 
 #include "server_Showing.h"
 
@@ -18,21 +19,22 @@ Showing::parseDatetime(std::string date, std::string time) {
 
 std::string Showing::printDatetime() const {
 	time_t tt = std::chrono::system_clock::to_time_t(date);
-	tm local_time = *localtime(&tt);
+	tm local_time{};
+	localtime_r(&tt, &local_time);
 	char buffer[sizeof(DATE_TIME_OUTPUT_FORMAT)];
 	std::strftime(buffer, sizeof(buffer), "(%d/%m/%Y) - (%H:%M)", &local_time);
 	return std::string(buffer);
 }
 
-Showing::Showing(int id, Room* room, Movie movie,
-						   std::chrono::system_clock::time_point date) :
+Showing::Showing(int id, Room *room, Movie movie,
+				 std::chrono::system_clock::time_point date) :
 		id(id),
 		room(room),
 		movie(std::move(movie)),
 		date(date) {}
 
-Showing::Showing(int id, Room* room, Movie movie, std::string date,
-						   std::string time) : Showing(
+Showing::Showing(int id, Room *room, Movie movie, std::string date,
+				 std::string time) : Showing(
 		id,
 		room,
 		std::move(movie),
@@ -108,7 +110,8 @@ Showing::operator std::string() const {
 
 bool Showing::hasDay(std::tm day) const {
 	time_t tt = std::chrono::system_clock::to_time_t(date);
-	tm local_time = *localtime(&tt);
+	tm local_time{};
+	localtime_r(&tt, &local_time);
 	return (local_time.tm_mday == day.tm_mday);
 }
 

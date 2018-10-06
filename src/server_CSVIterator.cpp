@@ -21,7 +21,7 @@ CSVIterator &CSVIterator::operator++() {
 	return *this;
 }
 
-const CSVIterator CSVIterator::operator++(int) {
+const CSVIterator CSVIterator::operator++(int num) {
 	CSVIterator tmp(*this);
 	++(*this);
 	return tmp;
@@ -37,7 +37,7 @@ CSVRow const *CSVIterator::operator->() const {
 
 bool CSVIterator::operator==(CSVIterator const &rhs) {
 	return ((this == &rhs) || ((this->m_str == nullptr) && (rhs.m_str ==
-			nullptr)));
+															nullptr)));
 }
 
 bool CSVIterator::operator!=(CSVIterator const &rhs) {

@@ -1,3 +1,5 @@
+#include <string>
+
 #include "server_RoomCreator.h"
 #include "server_InvalidInputParamsException.h"
 
@@ -20,7 +22,9 @@ RoomCreator::createLargeRoom(std::string id_as_string, std::string room_type) {
 	return new LargeRoom(std::move(id_as_string), std::move(room_type));
 }
 
-Room *RoomCreator::factoryMethod(std::string id_as_string, std::string room_type, std::string capacity) {
+Room *
+RoomCreator::factoryMethod(std::string id_as_string, std::string room_type,
+						   std::string capacity) {
 	if (capacity == SMALL_ROOM_CAPACITY_IDENTIFIER) {
 		return createSmallRoom(std::move(id_as_string), std::move(room_type));
 	}

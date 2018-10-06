@@ -1,4 +1,6 @@
 #include <sstream>
+#include <string>
+
 #include "server_CSVRow.h"
 
 std::string const &CSVRow::operator[](std::size_t index) const {

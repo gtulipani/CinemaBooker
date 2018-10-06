@@ -6,6 +6,7 @@
 class Thread {
 private:
 	std::thread thread;
+
 protected:
 	bool alive;
 
