@@ -2,6 +2,7 @@
 #define __COMMONS_SOCKET_H__
 
 #include <string>
+#include <iostream>
 
 #include "commons_socket_t.h"
 
@@ -10,9 +11,14 @@ private:
 	bool initialized;
 	socket_t skt;
 
-	socket_t* getSkt();
+	socket_t *getSkt();
 public:
 	Socket();
+
+	// Disabling the constructor by copy because it's a socket
+	Socket(const Socket &other) = delete;
+
+	Socket(Socket &&other) noexcept;
 
 	void connect(std::string host, std::string port);
 
@@ -24,11 +30,19 @@ public:
 
 	void send_int(int num);
 
-	long receive(std::string& out, unsigned long size);
+	long receive(std::string &out, unsigned long size);
 
 	int receive_int();
 
+	void close();
+
 	~Socket();
+
+	// Disabling the assignment by copy because it's a socket
+	Socket &operator=(const Socket &other) = delete;
+
+	// Overloading the assignment by movement
+	Socket &operator=(Socket &&other) noexcept;
 };
 
 

@@ -21,10 +21,6 @@ private:
 
 	static void deleteRooms(std::vector<Room *> rooms);
 
-	std::vector<std::string> split(const std::string &s, char delimiter);
-
-	void processCommand(const std::string &input, Socket &client_socket);
-
 	Room *getRoomWithId(std::string id);
 
 	Movie getMovieWithTitle(std::string title);
@@ -46,27 +42,6 @@ public:
 	~Server();
 
 	void start();
-
-	void
-	listMoviesByLanguage(const std::string &language,
-						 std::ostringstream &stream) const;
-
-	void
-	listMoviesByAge(const std::string &age_restriction,
-					std::ostringstream &stream) const;
-
-	void listMoviesByGenre(const std::string &genre,
-						   std::ostringstream &stream) const;
-
-	void listSeatsFromShowingId(const std::string &id,
-								std::ostringstream &stream) const;
-
-	void
-	listShowingsForDay(const std::tm &day, std::ostringstream &stream) const;
-
-	void
-	bookShowing(const std::string &showing_id, const std::string &, int column,
-				std::ostringstream &stream);
 };
 
 

@@ -41,6 +41,5 @@ int main(int argc, char *argv[]) {
 			program_result = SERVER_UNEXPECTED_ERROR;
 		}
 	}
-	std::cout << "Finishing program..." << std::endl;
 	return program_result;
 }

@@ -1,14 +1,24 @@
 #include <iostream>
 #include <string>
+#include <sys/socket.h>
 
 #include "commons_Socket.h"
 #include "commons_ConnectionRefusedException.h"
+#include "commons_ClientClosedSocketException.h"
 
 socket_t *Socket::getSkt() {
 	return &skt;
 }
 
-Socket::Socket() : initialized(false) {}
+Socket::Socket() : initialized(false) {
+}
+
+Socket::Socket(Socket &&other) noexcept : Socket() {
+	this->initialized = other.initialized;
+	this->skt = other.skt;
+
+	other.initialized = false;
+}
 
 void Socket::connect(std::string host, std::string port) {
 	// Connect through the socket as a client
@@ -76,16 +86,48 @@ long Socket::receive(std::string &out, unsigned long size) {
 
 int Socket::receive_int() {
 	int result;
-	// Receive int through the socket
-	if (!initialized ||
-		(socket_recv_int(&skt, &result) == SOCKET_CONNECTION_ERROR)) {
+	if (!initialized) {
 		throw ConnectionRefusedException();
 	}
-	return result;
+	// Receive int through the socket
+	switch (socket_recv_int(&skt, &result)) {
+		case SOCKET_CONNECTION_ERROR: {
+			throw ConnectionRefusedException();
+		}
+		case SOCKET_CONNECTION_CLOSED: {
+			throw ClientClosedSocketException();
+		}
+		default: {
+			return result;
+		}
+	}
+}
+
+void Socket::close() {
+	if (initialized) {
+		if (socket_shutdown(&skt, SHUT_RDWR) == SOCKET_CONNECTION_ERROR) {
+			throw ConnectionRefusedException();
+		}
+		socket_close(&skt);
+		initialized = false;
+	}
+}
+
+Socket& Socket::operator=(Socket&& other) noexcept {
+	if (this == &other) {
+		return *this; // other is myself!
+	}
+
+	this->initialized = other.initialized;
+	this->skt = other.skt;
+
+	other.initialized = false;
+
+	return *this;
 }
 
 Socket::~Socket() {
-	if (!initialized) {
+	if (initialized) {
 		socket_close(&skt);
 	}
 }

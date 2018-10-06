@@ -183,12 +183,18 @@ long socket_send_int(socket_t *self, int num) {
 
 int socket_recv_int(socket_t *self, int *out) {
 	char buffer[PROTOCOL_INT_BYTES];
-	if (socket_recv(self, buffer, PROTOCOL_INT_BYTES) ==
-		SOCKET_CONNECTION_ERROR) {
-		return SOCKET_CONNECTION_ERROR;
+	switch (socket_recv(self, buffer, PROTOCOL_INT_BYTES)) {
+		case SOCKET_CONNECTION_ERROR: {
+			return SOCKET_CONNECTION_ERROR;
+		}
+		case 0: { // According to recv documentation, the socket has been closed
+			return SOCKET_CONNECTION_CLOSED;
+		}
+		default: {
+			*out = from_big_endian(buffer);
+			return SOCKET_CONNECTION_SUCCESS;
+		}
 	}
-	*out = from_big_endian(buffer);
-	return SOCKET_CONNECTION_SUCCESS;
 }
 
 void socket_close(socket_t *self) {

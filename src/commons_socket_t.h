@@ -1,6 +1,7 @@
 #ifndef __SOCKET_H__
 #define __SOCKET_H__
 
+#define SOCKET_CONNECTION_CLOSED -2
 #define SOCKET_CONNECTION_ERROR -1
 #define SOCKET_CONNECTION_SUCCESS 0
 
