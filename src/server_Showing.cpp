@@ -22,7 +22,7 @@ std::string Showing::printDatetime() const {
 	tm local_time{};
 	localtime_r(&tt, &local_time);
 	char buffer[sizeof(DATE_TIME_OUTPUT_FORMAT)];
-	std::strftime(buffer, sizeof(buffer), "(%d/%m/%Y) - (%H:%M)", &local_time);
+	std::strftime(buffer, sizeof(buffer), "%d/%m/%Y - %H:%M", &local_time);
 	return std::string(buffer);
 }
 
