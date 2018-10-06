@@ -14,7 +14,7 @@
 #define COLUMN_SEPARATOR '\t'
 #define ASCII_A int('A')
 
-#define SEAT_ALREADY_BOOKED_ERROR "ERROR: El asiento ya esta reservado"
+#define SEAT_ALREADY_BOOKED_ERROR "ERROR: El asiento ya está reservado"
 #define SEAT_BOOKED_SUCCESS "OK"
 
 std::string Room::validateType(std::string type) {
